@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DES playground</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Welcome to DES</h1>
+
+    <p>Provide plain text to encode</p>
+    <form action="" method="post" id="encode">
+        {{ form.text }}
+
+        {{ form.submit }}
+    </form>
+
+    <div id="encoded">
+    </div>
+
+    <hr>
+
+    <p>Provide cipher in hexadecimal to decode</p>
+    <form action="" method="post" id="decode">
+        {{ form.text }}
+
+        {{ form.submitDecode }}
+    </form>
+
+    <div id="decoded">
+    </div>
+    <hr>
+    <b>Secret:</b>
+    <p id="secret">
+        {{ secret }}
+    </p>
+
+    <input type="button" value="New secret" id="secret_btn">
+
+    <script>
+        $("#secret_btn").on('click', function() {
+          console.log('123')
+          $.ajax({
+              url: "/secret",
+              type: "post",
+              success: function(response) {
+                $("#secret").html(response);
+              },
+              error: function(xhr) {
+                console.log('Error');
+              }
+            });
+        });
+
+        $("#encode").submit(function(e){
+            e.preventDefault();
+
+            var form = $(this)
+            
+            var text = form.serializeArray().find(obj => {
+                return obj.name === 'text'
+            }).value
+
+            $.ajax({
+              url: "/encode",
+              type: "get",
+              data: {jsdata: text},
+              success: function(response) {
+                $("#encoded").html(response);
+              },
+              error: function(xhr) {
+                console.log('Error');
+              }
+            });
+        });
+
+        $("#decode").submit(function(e){
+            e.preventDefault();
+
+            var form = $(this)
+            
+            var text = form.serializeArray().find(obj => {
+                return obj.name === 'text'
+            }).value
+
+            $.ajax({
+              url: "/decode",
+              type: "get",
+              data: {jsdata: text},
+              success: function(response) {
+                $("#decoded").html(response);
+              },
+              error: function(xhr) {
+                console.log('Error');
+              }
+            });
+        });
+        </script>
+</body>
+</html>
